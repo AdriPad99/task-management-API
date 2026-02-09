@@ -19,6 +19,15 @@ public class Tasks {
 
     public Tasks() {}
 
+    public Tasks(Integer id, String title, String description, String status, String priority, Integer assignedUserId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.assignedUserId = assignedUserId;
+    }
+
     public Integer getId() {
         return id;
     }

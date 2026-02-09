@@ -14,8 +14,22 @@ public class TasksService {
         this.repo = repo;
     }
 
+    
     public List<Tasks> getAllTasks() {
         return repo.findAll();
+    }
+    
+    public boolean taskIdExists(Integer id) {
+
+        List<Tasks> tasks = getAllTasks();
+
+        for (Tasks task: tasks) {
+            if(task.getId() == id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String addTask(Tasks task) {
@@ -55,5 +69,55 @@ public class TasksService {
         }
 
         return tasksWithCurrentStatus;
+    }
+
+    public ArrayList<Tasks> getTasksWithUserId(Integer id) {
+
+        List<Tasks> tasks = getAllTasks();
+
+        ArrayList<Tasks> userTasks;
+        userTasks = new ArrayList<>();
+
+        for (Tasks task: tasks) {
+            if(task.getAssignedUserId() == id) {
+                userTasks.add(task);
+            }
+        }
+
+        return userTasks;
+    }
+
+    public String updateTaskWithId(Integer id, Tasks task) {
+
+        if (taskIdExists(id)) {
+            Tasks userTask = new Tasks(
+                id, 
+                task.getTitle(), 
+                task.getDescription(), 
+                task.getStatus(), 
+                task.getPriority(), 
+                task.getAssignedUserId()
+            );
+            repo.save(userTask);
+    
+            return "updated task " + id + " successfully!";
+        } else {
+            return "Task id " + id + " does not exist in the db.";
+        }
+
+    }
+
+    public String deleteTaskWithId(Integer id) {
+
+        if (taskIdExists(id)) {
+            List<Tasks> userTasks = getTasksWithId(List.of(id));
+    
+            repo.delete(userTasks.get(0));
+    
+            return "User Task with ID of " + id + " was deleted!";
+        } else {
+            return "Task id " + id + " does not exist in the db.";
+        }
+        
     }
 }
